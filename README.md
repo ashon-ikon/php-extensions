@@ -26,7 +26,11 @@ Depending on you distribution or Operating system you will need to install the f
 * **[See others...](http://php.net/manual/en/install.php)**
 
 ## Navigating through PHP-Src
-PHP being a sophisticated and robust *application* written in `C language` is relies heavily on `C marco`'s. Sometimes you might wonder what any of these definitions are.
+PHP being a sophisticated and robust *application* written in `C language` is relies heavily on `C marco`'s. Sometimes you might wonder what any of these definitions are. See **[Internal Zend Api doc](http://php.net/manual/en/internals2.ze1.zendapi.php)** for more details.
+
+#### Startup and Shutdown method
+For more details about extension startup and shutdown methods [see](http://php.net/manual/en/internals2.ze1.zendapi.php#internals2.ze1.zendapi.tab.init-shutdown)
+
 ### Macro tricks
 If ever found with guessing what a macro is, you can easily invoke this `grep` trick on the root tree of the `php-src` folder.
 ```bash
@@ -38,8 +42,19 @@ grep -r -E '\# *define +ZVAL_NEW_STR' $(pwd)
 Note, for starters, you should consider copying these codes to your `php-src/ext/` and compile from there till you grasp more concepts of how PHP works internally. Or at least a sym-link too could be handy.
 `ln -svf samples/hello_world path/to/php-src/ext/hello_world` etc.
 
+### Building extensions
+Building the extension is mostly straightforwards but care needs to be take when attempting to compile the source for the for the first time.
+
+```bash
+buildconf --force # important to add `--force' for custom changes
+./configure --enable-hello+world=shared
+make
+make check
+```
+
 * [Hello World](samples/hello_world/README.md)
 * [Average function](samples/average/README.md)
+
 
 
 ## License

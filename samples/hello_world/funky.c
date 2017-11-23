@@ -12,46 +12,41 @@
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
   +----------------------------------------------------------------------+
-  | Author:                                                              |
+  | Author:  Yinka Asonibare                                             |
   +----------------------------------------------------------------------+
 */
 
-#ifndef PHP_HELLO_WORLD_H
-#define PHP_HELLO_WORLD_H
-
-extern zend_module_entry hello_world_module_entry;
-#define phpext_hello_world_ptr &hello_world_module_entry
-
-#define PHP_HELLO_WORLD_VERSION "0.1.0"
-
-#ifdef PHP_WIN32
-#	define PHP_HELLO_WORLD_API __declspec(dllexport)
-#elif defined(__GNUC__) && __GNUC__ >= 4
-#	define PHP_HELLO_WORLD_API __attribute__ ((visibility("default")))
-#else
-#	define PHP_HELLO_WORLD_API
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
 
-#ifdef ZTS
-#include "TSRM.h"
-#endif
+#include "php.h"
+#include "php_ini.h"
+#include "ext/standard/info.h"
+#include "php_hello_world.h"
 
-ZEND_FUNCTION(say_zahp);
+ZEND_FUNCTION(say_zahp)
+{
+    char *za_name;
+    size_t za_name_len;
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &za_name, &za_name_len) == FAILURE) {
+      return;
+    }
 
-#define HELLO_WORLD_G(v) ZEND_MODULE_GLOBALS_ACCESSOR(hello_world, v)
+    const char *straya_lingos[] = {
+      "ie",
+      "ish",
+      "na"
+    };
 
-#if defined(ZTS) && defined(COMPILE_DL_HELLO_WORLD)
-ZEND_TSRMLS_CACHE_EXTERN()
-#endif
+    char *name = emalloc((za_name_len + 5 + 1) * sizeof name); // Assumes no lingo longer than 4 chars
+    if (!name) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Failed to allocate memory");
+        RETURN_NULL();
+    }
 
-#endif
+    php_sprintf(name, "Yo! %s'%s", za_name, straya_lingos[rand() % 3]);
 
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: noet sw=4 ts=4 fdm=marker
- * vim<600: noet sw=4 ts=4
- */
+    RETVAL_STRING(name);
+    efree(name);
+}

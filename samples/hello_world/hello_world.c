@@ -25,6 +25,8 @@
 #include "ext/standard/info.h"
 #include "php_hello_world.h"
 
+#include <string.h>
+
 
 PHP_MINIT_FUNCTION(hello_world)
 {
@@ -64,15 +66,32 @@ PHP_MINFO_FUNCTION(hello_world)
 }
 
 
-PHP_FUNCTION(say_hello_world)
+ZEND_FUNCTION(say_hello_world)
 {
 	RETURN_STRING("Hello, World");
 }
 
+ZEND_FUNCTION(say_greetings)
+{
+	char *name;
+	size_t name_len;
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
+		// Recommended to fail silently
+		return;
+	}
+
+	char long_name[1024];
+	long_name[0] = '\0';
+	php_sprintf(long_name, "Hello, %s", name);
+
+	RETURN_STRING(long_name);
+}
 
 const zend_function_entry hello_world_functions[] = {
-	PHP_FE(say_hello_world, NULL)
-	PHP_FE_END
+	ZEND_FE(say_hello_world, NULL)
+	ZEND_FE(say_greetings, NULL)
+	ZEND_FE(say_zahp, NULL)
+	ZEND_FE_END
 };
 
 
