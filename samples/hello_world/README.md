@@ -4,7 +4,7 @@ This is a very minimal hello world extension. It introduces the basic concepts a
 
 ----
 
-Please ensure all required packages and php-src is prepared. Refer to e[xtension dependencies](./../README.md) for more details.
+Please ensure all required packages and php-src is prepared. Refer to e[xtension dependencies](./../../README.md#installing-required-packages) for more details.
 
 ## Preamble
 Traditionally, a minimal `Hello World` function in PHP could be:
